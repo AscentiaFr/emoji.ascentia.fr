@@ -27,4 +27,9 @@ find "${temoji_dir}/assets/svg" -name '*.svg' -print0 | while IFS= read -r -d ''
   cp "$src" "$dst"
 done
 
+# Add aliases
+cd "${dist_dir}/svg" && {
+  cp '2620.svg' '2620-fe0f.svg'
+}
+
 exit 0
