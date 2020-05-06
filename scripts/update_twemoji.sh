@@ -30,6 +30,7 @@ done
 # Add aliases
 cd "${dist_dir}/svg" && {
   cp '2620.svg' '2620-fe0f.svg'
+  cp '1f577.svg' '1f577-fe0f.svg'
 }
 
 exit 0
