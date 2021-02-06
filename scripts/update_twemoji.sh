@@ -35,6 +35,7 @@ cd "${dist_dir}/svg" && {
   cp '1f578.svg' '1f578-fe0f.svg'
   cp '1f54a.svg' '1f54a-fe0f.svg'
   cp '1f3f5.svg' '1f3f5-fe0f.svg'
+  cp '1f43f.svg' '1f43f-fe0f.svg'
 }
 
 exit 0
