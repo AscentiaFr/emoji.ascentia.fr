@@ -1,42 +1,28 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -Eeuo pipefail
+shopt -s inherit_errexit
+
+script_dir="$(dirname "$(readlink -f -- "$0")")"
 
 # Prepare dist directory
-dist_dir="$(dirname "$(readlink -f "$0")")/../dist/twemoji"
-mkdir -p "$dist_dir"
-mkdir -p "${dist_dir}/svg"
-
-# Prepare temp directory
-tmp_dir="$(mktemp -d)"
-if [ -z "$tmp_dir" ]; then
-  echo 'Error: empty tmp_dir' >&2
-  exit 1
-fi
-clean_tmp_dir() {
-  rm -rf "$tmp_dir"
-}
-trap clean_tmp_dir INT TERM EXIT
-
-# Close twemoji repository
-temoji_dir="${tmp_dir}/twemoji"
-git clone --depth 1 'https://github.com/twitter/twemoji.git' "$temoji_dir"
+dist_dir="${script_dir}/../dist/twemoji"
+mkdir -p -- "${dist_dir}/svg"
 
 # Copy svg files
-find "${temoji_dir}/assets/svg" -name '*.svg' -print0 | while IFS= read -r -d '' src; do
-  dst="${dist_dir}/svg/$(basename "$src")"
-  cp "$src" "$dst"
-done
+twemoji_dir="${TWEMOJI_DIR?required}"
+rsync -va --delete --prune-empty-dirs --include='*.svg' --exclude='*' "${twemoji_dir}/" "${dist_dir}/svg/"
 
 # Add aliases
-cd "${dist_dir}/svg" && {
-  cp '2620.svg' '2620-fe0f.svg'
-  cp '1f577.svg' '1f577-fe0f.svg'
-  cp '1f32a.svg' '1f32a-fe0f.svg'
-  cp '1f578.svg' '1f578-fe0f.svg'
-  cp '1f54a.svg' '1f54a-fe0f.svg'
-  cp '1f3f5.svg' '1f3f5-fe0f.svg'
-  cp '1f43f.svg' '1f43f-fe0f.svg'
-  cp '1f336.svg' '1f336-fe0f.svg'
-}
+pushd "${dist_dir}/svg" >/dev/null
+cp '2620.svg' '2620-fe0f.svg'
+cp '1f577.svg' '1f577-fe0f.svg'
+cp '1f32a.svg' '1f32a-fe0f.svg'
+cp '1f578.svg' '1f578-fe0f.svg'
+cp '1f54a.svg' '1f54a-fe0f.svg'
+cp '1f3f5.svg' '1f3f5-fe0f.svg'
+cp '1f43f.svg' '1f43f-fe0f.svg'
+cp '1f336.svg' '1f336-fe0f.svg'
+popd >/dev/null
 
+printf 'Done!\n'
 exit 0
